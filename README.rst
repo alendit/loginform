@@ -22,13 +22,17 @@ Usage is very simple and best illustrated with an example::
     >>> from loginform import fill_login_form
     >>> import requests
     >>> url = "https://github.com/login"
-    >>> r = requests.get(url)
-    >>> fill_login_form(url, r.text, "john", "secret")
+    >>> session = requests.Session()
+    >>> r = session.get(url)
+    >>> login_info = fill_login_form(url, r.text, "john", "secret")
+    >>> login_info
     ([('authenticity_token', 'FQgPiKd1waDL+pycPH8IGutirTnP69SiZgm0zXwn+VQ='),
       ('login', 'john'),
       ('password', 'secret')],
      u'https://github.com/session',
      'POST')
+     >>> # now can login using the login_info object
+     >>> session.request(login_info[2], login_info[1], data=login_info[0])  
 
 And it is possible to use it as a tool to quickly debug a login form::
 
